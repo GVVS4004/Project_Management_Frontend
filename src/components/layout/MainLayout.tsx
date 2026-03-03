@@ -26,7 +26,7 @@
           {/* flex-1 = flex: 1 (takes remaining space) */}
           {/* p-6 = padding 1.5rem on all sides */}
           {/* bg-gray-50 = light gray background */}
-          <main className="flex-1 p-6 bg-gray-50">
+          <main className="flex-1 min-w-0 p-6 bg-gray-50 overflow-auto">
             {/* Outlet renders the matched child route component */}
             <Outlet />
           </main>

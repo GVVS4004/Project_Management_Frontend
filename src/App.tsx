@@ -4,11 +4,12 @@ import PrivateRoute from "./components/PrivateRoute";
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import ProjectDetailsPage from "./features/projects/pages/ProjectDetailsPage";
-import Tasks from "./pages/Tasks";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
+import Tasks from "./features/tasks/pages/Tasks";
+import TaskDetailsPage from "./features/tasks/components/TaskDetailsPage";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="projects" element={<Projects />} />
           <Route path="projects/:id" element={<ProjectDetailsPage />} />
           <Route path="tasks" element={<Tasks />} />
+           <Route path="tasks/:id" element={<TaskDetailsPage />} />
           <Route path="profile" element={<Profile />} />
         </Route>
 
