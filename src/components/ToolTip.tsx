@@ -10,7 +10,7 @@ interface TooltipProps {
 
 const Tooltip = ({ content, children, position = 'top', delay = 200, variant = 'dark' }: TooltipProps) => {
   const [isVisible, setIsVisible] = useState(false);
-  let timeout: NodeJS.Timeout;
+  let timeout: ReturnType<typeof setTimeout>;
 
   const showTooltip = () => {
     timeout = setTimeout(() => setIsVisible(true), delay);

@@ -56,6 +56,28 @@ const AssigneeSelect = ({ value, selectedName, onChange}: AssigneeSelectProps) =
 
             {isOpen && (
                 <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
-                    
+                    {isLoading && <div className="p-2 text-sm text-gray-500">Loading...</div>}
+                    {!isLoading && users.length === 0 && query && (
+                        <div className="p-2 text-sm text-gray-500">No users found</div>
+                    )}
+                    {users.map((user) => (
+                        <button
+                            key={user.id}
+                            type="button"
+                            onClick={() => {
+                                onChange(user.id);
+                                setQuery('');
+                                setIsOpen(false);
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm hover:bg-indigo-50 hover:text-indigo-700"
+                        >
+                            {user.firstName} {user.lastName} (@{user.username})
+                        </button>
+                    ))}
                 </div>
-    )
+            )}
+        </div>
+    );
+};
+
+export default AssigneeSelect;

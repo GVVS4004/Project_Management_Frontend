@@ -136,7 +136,7 @@ export const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
             </label>
             <select
               className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
-                errors.status as any
+                (errors as any).status
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-300"
               }`}
