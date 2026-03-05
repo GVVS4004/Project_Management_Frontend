@@ -3,6 +3,9 @@ import type { Comment } from "../types/comment.types";
 import { useUpdateComment, useDeleteComment } from "../hooks/useComments";
 import CommentForm from "./CommentForm";
 import Avatar from "../../../components/Avatar";
+import { timeAgo } from "../../../utils/timeAgo";
+import RichTextEditor from "../../../components/editor/RichTextEditor";
+import RichTextContent from "../../../components/editor/RichTextContent";
 
 interface CommentItemProps {
   comment: Comment;
@@ -33,25 +36,6 @@ const CommentItem = ({ comment, taskId, currentUserId }: CommentItemProps) => {
 
   const handleDelete = async () => {
     await deleteCommentMutation.mutateAsync({ taskId, commentId: comment.id });
-  };
-
-  const timeAgo = (dateString: string): string => {
-    const now = new Date();
-    const date = new Date(dateString);
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-    if (diffInSeconds < 60) return `${diffInSeconds} seconds ago`;
-    const diffInMinutes = Math.floor(diffInSeconds / 60);
-    if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) return `${diffInHours} hours ago`;
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 30) return `${diffInDays} days ago`;
-    return date.toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
   };
 
   if (comment.isDeleted) {
@@ -96,16 +80,18 @@ const CommentItem = ({ comment, taskId, currentUserId }: CommentItemProps) => {
         </div>
         {isEditing ? (
           <div className="mt-2 space-y-2">
-            <textarea
-              value={editedContent}
-              onChange={(e) => setEditedContent(e.target.value)}
-              rows={2}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+            <RichTextEditor
+              content={editedContent}
+              onChange={setEditedContent}
+              placeholder="Edit your comment..."
+              enableMentions={true}
             />
             <div className="flex gap-2">
               <button
                 onClick={handleEdit}
-                disabled={!editedContent.trim() || updateCommentMutation.isPending}
+                disabled={
+                  !editedContent.trim() || updateCommentMutation.isPending
+                }
                 className="px-3 py-1 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
               >
                 {updateCommentMutation.isPending ? "Saving..." : "Save"}
@@ -122,9 +108,10 @@ const CommentItem = ({ comment, taskId, currentUserId }: CommentItemProps) => {
             </div>
           </div>
         ) : (
-          <p className="text-sm text-gray-700 whitespace-pre-wrap">
-            {comment.content}
-          </p>
+          <RichTextContent
+            content={comment.content}
+            className="text-sm text-gray-700"
+          />
         )}
 
         {/* Action buttons */}

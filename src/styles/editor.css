@@ -1,0 +1,44 @@
+span[data-type="mention"] {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+  border-radius: 4px;
+  padding: 1px 4px;
+  font-weight: 500;
+}
+
+/* Tiptap editor area */
+.tiptap {
+  outline: none;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: #9ca3af;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Editor images */
+.tiptap img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 8px 0;
+}
+
+/* Editor videos */
+.tiptap video {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 8px 0;
+}
+
+/* Rendered content images and videos */
+.prose img {
+  border-radius: 8px;
+}
+
+.prose video {
+  max-width: 100%;
+  border-radius: 8px;
+}

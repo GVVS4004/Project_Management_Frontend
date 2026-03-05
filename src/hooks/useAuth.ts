@@ -34,13 +34,13 @@ export const useRegister = () => {
 };
 
 export const useLogout = () => {
-  const navigate = useNavigate();
+
 
   return useMutation({
     mutationFn: () => authApi.logout(),
     onSuccess: () => {
       userService.removeUser();
-      navigate("/login");
+      window.location.href = "/login";
     },
   });
 };

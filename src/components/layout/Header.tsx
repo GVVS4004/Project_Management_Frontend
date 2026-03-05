@@ -2,9 +2,14 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useLogout } from '../../hooks/useAuth';
+import NotificationBell from "../../features/notifications/components/NotificationBell";
+import Avatar from "../Avatar";
+import { userService } from "../../services/auth.service";
+import Tooltip from "../ToolTip";
 
 const Header = () => {
   const useLogoutMutation = useLogout();
+  const user = userService.getUser();
   const handleLogout = () => {
     useLogoutMutation.mutate();
   }
@@ -45,9 +50,11 @@ const Header = () => {
           {/* items-center = vertically center items */}
           {/* space-x-4 = horizontal gap of 1rem between buttons */}
           <div className="flex items-center space-x-4">
-            <button className="text-gray-700 hover:text-blue-600">
-              Notifications
-            </button>
+            <NotificationBell />
+            {/* <div title={`${user?.firstName} ${user?.lastName}`}> */}
+                <Avatar src={user?.profileImageUrl?? ""} alt={user?.firstName + " " + user?.lastName || "User"} />                
+            {/* </div> */}
+                
             <button className="text-gray-700 hover:text-blue-600" onClick={handleProfile}>
               Profile
             </button>

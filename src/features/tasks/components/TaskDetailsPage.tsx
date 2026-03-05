@@ -8,6 +8,8 @@ import TaskFormModal from "../components/TaskFormModal";
 
 import { useUserProfile } from "../../../hooks/useUser";
 import DeleteConfirmModal from "./DeleteConfirmModal";
+import AttachmentSection from "./AttachmentSection";
+import RichTextContent from "../../../components/editor/RichTextContent";
 
 const TaskDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,7 +24,6 @@ const TaskDetailsPage = () => {
 
   const { data: currentUser } = useUserProfile();
   const currentUserId = currentUser?.id ?? 0;
-
 
   const handleDelete = async () => {
     if (!task) return;
@@ -74,16 +75,17 @@ const TaskDetailsPage = () => {
               Description
             </h3>
             {task.description ? (
-              <p className="text-sm text-gray-700 whitespace-pre-wrap">
-                {task.description}
-              </p>
+              <RichTextContent
+                content={task.description}
+                className="text-sm text-gray-700"
+              />
             ) : (
               <p className="text-sm text-gray-400 italic">
                 No description provided.
               </p>
             )}
           </div>
-
+          <AttachmentSection taskId={task.id} currentUserId={currentUserId} />
           {/* Comments */}
           <div className="bg-white rounded-lg border border-gray-200 p-5">
             <CommentList taskId={task.id} currentUserId={currentUserId} />

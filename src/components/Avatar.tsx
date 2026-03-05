@@ -9,7 +9,7 @@ const Avatar = ({ src, alt }: { src: string; alt: string }) => {
     return parts[0].charAt(0).toUpperCase();
   };
   return (
-    <div className="h-8 w-8 rounded-full bg-gray-300">
+    <div className="h-8 w-8 rounded-full bg-gray-300" title={alt}>
       {(src !== "" && src !== null) ? (
         <img src={src} className="h-8 w-8 rounded-full"/>
       ) : (

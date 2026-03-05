@@ -52,6 +52,17 @@ const TaskDetailSidebar = ({ task }: TaskDetailSidebarProps) => {
           <span className="text-sm text-gray-400 italic">Unassigned</span>
         )}
       </SidebarRow>
+      <SidebarRow label="CreatedBy">
+        <div className="flex items-center gap-2">
+          <Avatar
+            src={task.createdBy.profileImageUrl ?? ""}
+            alt={`${task.createdBy.firstName} ${task.createdBy.lastName}`}
+          />
+          <span className="text-sm text-gray-900">
+            {task.createdBy.firstName} {task.createdBy.lastName}
+          </span>
+        </div>
+      </SidebarRow>
 
       <SidebarRow label="Project">
         <span className="text-sm text-gray-900">{task.projectName}</span>

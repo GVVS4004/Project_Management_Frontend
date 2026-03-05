@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
     type CreateTaskFormData,
     type UpdateTaskFormData,
   } from "../schemas/task.schema";
+import RichTextEditor from "../../../components/editor/RichTextEditor";
 
   interface TaskFormModalProps {
     isOpen: boolean;
@@ -33,7 +34,9 @@ import { useEffect, useState } from "react";
       register,
       handleSubmit,
       formState: { errors, isSubmitting },
-      reset
+      reset,
+      setValue,
+      watch,
     } = useForm<CreateTaskFormData | UpdateTaskFormData>({
       resolver: zodResolver(isEditMode ? updateTaskSchema : createTaskSchema),
       defaultValues: {
@@ -129,22 +132,19 @@ import { useEffect, useState } from "react";
           />
 
           <div>
-            <label htmlFor="task-description" className="block text-sm font-medium text-gray-700 mb-1">
-              Description
-            </label>
-            <textarea
-              id="task-description"
-              placeholder="Enter task description (optional)"
-              rows={3}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
-                errors.description ? "border-red-500" : "border-gray-300"
-              }`}
-              {...register("description")}
-            />
-            {errors.description && (
-              <ErrorMessage message={errors.description.message as string} />
-            )}
-          </div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Description
+              </label>
+              <RichTextEditor
+                key={task?.id ?? "new"}
+                content={watch("description") || ""}
+                onChange={(html) => setValue("description", html)}
+                placeholder="Enter task description (optional)"
+              />
+              {errors.description && (
+                <ErrorMessage message={errors.description.message as string} />
+              )}
+            </div>
 
           <div className="grid grid-cols-2 gap-4">
             {/* Type */}
