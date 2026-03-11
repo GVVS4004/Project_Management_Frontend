@@ -12,15 +12,16 @@ import type {
 export interface GetTasksParams {
     page?: number;
     size?: number;
+    taskTypes?: string[]; // Optional filter by task types
 }
 
 export const taskApi = {
 
     getTasksByProject: async(projectId: number, params: GetTasksParams = {}): Promise<PagedResponse<Task>> => {
 
-        const { page = 0, size = 100 } = params;
+        const { page = 0, size = 100, taskTypes } = params;
         const response = await apiClient.get<ApiResponse<PagedResponse<Task>>>(`/tasks/project/${projectId}`, {
-            params: { page, size }
+            params: { page, size, types: taskTypes?.join(',') }
         });
         return response.data.data;
     },

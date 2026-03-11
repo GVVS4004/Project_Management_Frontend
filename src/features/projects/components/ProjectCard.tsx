@@ -18,7 +18,7 @@ const ProjectCard = ({ project, onEdit }: ProjectCardProps) => {
           <div className="flex flex-row gap-2 justify-between">
             <div className="flex items-center">
               <h2 className="text-xl font-semibold text-gray-800 truncate w-50">
-                {project.name}
+                <Tooltip content={project.name}>{project.name}</Tooltip>
               </h2>
             </div>
             <div className="flex items-center gap-2">

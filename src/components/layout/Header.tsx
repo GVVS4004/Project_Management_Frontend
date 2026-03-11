@@ -5,7 +5,6 @@ import { useLogout } from '../../hooks/useAuth';
 import NotificationBell from "../../features/notifications/components/NotificationBell";
 import Avatar from "../Avatar";
 import { userService } from "../../services/auth.service";
-import Tooltip from "../ToolTip";
 
 const Header = () => {
   const useLogoutMutation = useLogout();
@@ -40,9 +39,6 @@ const Header = () => {
             <Link to="/projects" className="text-gray-700 hover:text-blue-600">
               Projects
             </Link>
-            <Link to="/tasks" className="text-gray-700 hover:text-blue-600">
-              Tasks
-            </Link>
           </nav>
 
           {/* User Menu Section */}
@@ -51,10 +47,7 @@ const Header = () => {
           {/* space-x-4 = horizontal gap of 1rem between buttons */}
           <div className="flex items-center space-x-4">
             <NotificationBell />
-            {/* <div title={`${user?.firstName} ${user?.lastName}`}> */}
-                <Avatar src={user?.profileImageUrl?? ""} alt={user?.firstName + " " + user?.lastName || "User"} />                
-            {/* </div> */}
-                
+            <Avatar src={user?.profileImageUrl?? ""} alt={user?.firstName + " " + user?.lastName || "User"} />                
             <button className="text-gray-700 hover:text-blue-600" onClick={handleProfile}>
               Profile
             </button>

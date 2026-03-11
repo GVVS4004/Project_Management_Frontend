@@ -12,11 +12,11 @@ import AttachmentSection from "./AttachmentSection";
 import RichTextContent from "../../../components/editor/RichTextContent";
 
 const TaskDetailsPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { taskId, projectId } = useParams<{ taskId: string; projectId: string }>();
   const navigate = useNavigate();
-  const taskId = Number(id);
+  const taskIdNumber = Number(taskId);
 
-  const { data: task, isLoading, isError } = useTaskById(taskId);
+  const { data: task, isLoading, isError } = useTaskById(taskIdNumber);
   const deleteMutation = useDeleteTask();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -31,7 +31,7 @@ const TaskDetailsPage = () => {
       taskId: task.id,
       projectId: task.projectId,
     });
-    navigate("/tasks");
+    navigate(`/projects/${task.projectId}/tasks`);
   };
 
   if (isLoading) {
@@ -47,7 +47,7 @@ const TaskDetailsPage = () => {
       <div className="flex flex-col items-center justify-center h-64">
         <p className="text-red-600 mb-2">Task not found or failed to load.</p>
         <button
-          onClick={() => navigate("/tasks")}
+          onClick={() => navigate(`/projects/${projectId}/tasks`)}
           className="text-sm text-indigo-600 hover:text-indigo-800"
         >
           ← Back to Tasks

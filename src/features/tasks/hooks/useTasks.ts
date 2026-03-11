@@ -7,6 +7,7 @@ import type { CreateTaskRequest, Task, TaskStatus, UpdateTaskRequest, PagedRespo
 export const taskKeys = {
     all: ['tasks'] as const,
     byProject: (projectId: number) => [...taskKeys.all, 'project', projectId] as const,
+    byProjectAndTypes: (projectId: number, taskTypes?: string[]) => [...taskKeys.all, 'project', projectId, taskTypes] as const,
     my: () => [...taskKeys.all, 'my'] as const,
     detail: (taskId: number) => [...taskKeys.all, 'detail', taskId] as const,
     search: (query: string) => [...taskKeys.all, 'search', query] as const,
@@ -14,7 +15,7 @@ export const taskKeys = {
 
 export const useTasksByProject = (projectId: number, params?: GetTasksParams) => {
     return useQuery({
-        queryKey: taskKeys.byProject(projectId),
+        queryKey: taskKeys.byProjectAndTypes(projectId, params?.taskTypes),
         queryFn: () => taskApi.getTasksByProject(projectId, params),
         enabled: projectId > 0,
         staleTime: 2 * 60 * 1000, // 2 minutes

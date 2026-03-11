@@ -8,14 +8,15 @@ export interface GetProjectsParams {
     size?: number;
     status?: ProjectStatus;
     search?: string;
+    ownerId?: number;
 }
 
 export const projectApi = {
 
     getAllProjects: async (params: GetProjectsParams = {}): Promise<PagedResponse<Project>> => {
-        const { page = 0, size = 20, status, search } = params;
+        const { page = 0, size = 20, status, search, ownerId } = params;
         const response = await apiClient.get<ApiResponse<PagedResponse<Project>>>("/projects", {
-            params: { page, size, ...(status && { status }), ...(search && { search }) }
+            params: { page, size, ...(status && { status }), ...(search && { search }), ...(ownerId && { ownerId }) }
         });
         return response.data.data;
     },

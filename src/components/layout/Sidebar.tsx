@@ -7,7 +7,6 @@ const Sidebar = () => {
     const navigation = [
         { name: 'Dashboard', path: '/dashboard', icon: '📊' },
         { name: 'Projects', path: '/projects', icon: '📁' },
-        { name: 'Tasks', path: '/tasks', icon: '✓' },
         { name: 'Team', path: '/team', icon: '👥' },
         { name: 'Settings', path: '/settings', icon: '⚙️' },
     ]

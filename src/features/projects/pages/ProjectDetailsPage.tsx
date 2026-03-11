@@ -21,12 +21,12 @@ import AddMemberModal from '../components/AddMemberModal';
  */
 
 const ProjectDetailsPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();  // Get project ID from URL
+  const { projectId } = useParams<{ projectId: string }>();  // Get project ID from URL
   const navigate = useNavigate();
-  const { data: project, isLoading, error } = useProjectById(Number(id));
+  const { data: project, isLoading, error } = useProjectById(Number(projectId));
 
   // Only fetch members if project exists and loaded successfully
-  const { data: members } = useMembers(Number(id), {
+  const { data: members } = useMembers(Number(projectId), {
     enabled: !!project, // Only fetch when project is loaded
   });
 
@@ -218,6 +218,41 @@ const ProjectDetailsPage: React.FC = () => {
               Last Updated
             </h3>
             <p className="text-gray-900">{formatDate(project.updatedAt)}</p>
+          </div>
+        </div>
+
+        {/* Board Navigation */}
+        <div className="border-t pt-6 mb-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Boards</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Link
+              to={`/projects/${projectId}/epics`}
+              className="flex items-center gap-3 p-4 bg-purple-50 border border-purple-200 rounded-lg hover:bg-purple-100 transition-colors"
+            >
+              <div className="p-2 bg-purple-100 rounded-lg">
+                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-medium text-gray-900">Epic Board</p>
+                <p className="text-sm text-gray-500">View and manage epics</p>
+              </div>
+            </Link>
+            <Link
+              to={`/projects/${projectId}/tasks`}
+              className="flex items-center gap-3 p-4 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100 transition-colors"
+            >
+              <div className="p-2 bg-indigo-100 rounded-lg">
+                <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-medium text-gray-900">Task Board</p>
+                <p className="text-sm text-gray-500">View and manage stories, tasks, and bugs</p>
+              </div>
+            </Link>
           </div>
         </div>
 

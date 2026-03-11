@@ -1,39 +1,45 @@
 import { useState, useCallback } from "react";
-import { useMyProjects } from "../../projects/hooks/useProjects";
 import { useTasksByProject, useUpdateTaskStatus, useDeleteTask } from "../hooks/useTasks";
-  import { TaskStatus, type Task } from "../types/task.types";
-  import { useTaskFilters } from "../hooks/useTaskFilters";
-  import KanbanBoard from "../components/KanbanBoard";
-  import TaskFormModal from "../components/TaskFormModal";
-  import ViewToggle from "../components/ViewToggle";
-  import TaskFilters from "../components/TaskFilters";
-  import TaskTable from "../components/TaskTable";
-  import BulkActionBar from "../components/BulkActionBar";
-import { useNavigate } from "react-router-dom";
+import { useProjectById } from "../../projects/hooks/useProjects";
+import { TaskStatus, type Task } from "../types/task.types";
+import { useTaskFilters } from "../hooks/useTaskFilters";
+import KanbanBoard from "../components/KanbanBoard";
+import TaskFormModal from "../components/TaskFormModal";
+import ViewToggle from "../components/ViewToggle";
+import TaskFilters from "../components/TaskFilters";
+import TaskTable from "../components/TaskTable";
+import BulkActionBar from "../components/BulkActionBar";
+import { useNavigate, useParams, Link } from "react-router-dom";
 
-  const TaskBoardPage = () => {
-    const [selectedProjectId, setSelectedProjectId] = useState<number>(0);
+interface BoardPageProps {
+    title: string;
+    taskTypes: string[];
+    createButtonLabel: string;
+}
+
+  const BoardPage = ({ title, taskTypes, createButtonLabel }: BoardPageProps) => {
+    const { projectId } = useParams<{ projectId: string }>();
+    const selectedProjectId = Number(projectId) || 0;
+    const { data: project } = useProjectById(selectedProjectId);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [activeView, setActiveView] = useState<'board' | 'list'>('board');
     const [selectedTaskIds, setSelectedTaskIds] = useState<Set<number>>(new Set());
 
     const navigate = useNavigate();
 
-    const { data: projectsData, isLoading: projectsLoading } = useMyProjects();
     const {
       data: tasksData,
       isLoading: tasksLoading,
       isError,
-    } = useTasksByProject(selectedProjectId, { page: 0, size: 100 });
+    } = useTasksByProject(selectedProjectId, { page: 0, size: 100, taskTypes });
 
     const updateTaskStatusMutation = useUpdateTaskStatus();
     const deleteTaskMutation = useDeleteTask();
 
-    const projects = projectsData?.content ?? [];
     const tasks = tasksData?.content ?? [];
 
     const handleTaskClick = (task: Task) => {
-      navigate(`/tasks/${task.id}`);
+      navigate(`/projects/${projectId}/tasks/${task.id}`);
     };
 
     const {
@@ -46,10 +52,6 @@ import { useNavigate } from "react-router-dom";
       clearFilters,
       activeFilterCount,
     } = useTaskFilters(tasks);
-
-    if (selectedProjectId === 0 && projects.length > 0) {
-      setSelectedProjectId(projects[0].id);
-    }
 
     const handleSelectToggle = useCallback((taskId: number) => {
       setSelectedTaskIds(prev => {
@@ -93,37 +95,7 @@ import { useNavigate } from "react-router-dom";
       setSelectedTaskIds(new Set());
     };
 
-    const handleProjectChange = (projectId: number) => {
-      setSelectedProjectId(projectId);
-      setSelectedTaskIds(new Set());
-      clearFilters();
-    };
-
     const renderContent = () => {
-      if (projectsLoading) {
-        return (
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600" />
-          </div>
-        );
-      }
-
-      if (projects.length === 0) {
-        return (
-          <div className="flex flex-col items-center justify-center h-64 bg-white rounded-lg shadow">
-            <p className="text-gray-500 text-lg">No projects found</p>
-            <p className="text-gray-400 text-sm mt-1">Create a project first to start adding tasks</p>
-          </div>
-        );
-      }
-
-      if (selectedProjectId === 0) {
-        return (
-          <div className="flex items-center justify-center h-64 bg-white rounded-lg shadow">
-            <p className="text-gray-500">Select a project to view tasks</p>
-          </div>
-        );
-      }
 
       if (tasksLoading) {
         return (
@@ -185,7 +157,14 @@ import { useNavigate } from "react-router-dom";
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Tasks</h1>
+            <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+              <Link to={`/projects/${projectId}`} className="hover:text-indigo-600 transition-colors">
+                {project?.name ?? 'Project'}
+              </Link>
+              <span>/</span>
+              <span className="text-gray-900 font-medium">{title}</span>
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
             <p className="text-sm text-gray-500 mt-1">
               {activeView === 'board'
                 ? 'Drag and drop tasks to update their status'
@@ -197,22 +176,6 @@ import { useNavigate } from "react-router-dom";
             {/* View Toggle */}
             <ViewToggle activeView={activeView} onViewChange={handleViewChange} />
 
-            {/* Project Selector */}
-            <select
-              value={selectedProjectId}
-              onChange={(e) => handleProjectChange(Number(e.target.value))}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500
-  focus:border-transparent text-sm"
-            >
-              <option value={0} disabled>
-                Select a project
-              </option>
-              {projects.map((project) => (
-                <option key={project.id} value={project.id}>
-                  {project.name}
-                </option>
-              ))}
-            </select>
 
             {/* Create Task Button */}
             <button
@@ -221,7 +184,7 @@ import { useNavigate } from "react-router-dom";
               className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700
   disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              + New Task
+              {createButtonLabel}
             </button>
           </div>
         </div>
@@ -249,4 +212,4 @@ import { useNavigate } from "react-router-dom";
     );
   };
 
-  export default TaskBoardPage;
+  export default BoardPage;

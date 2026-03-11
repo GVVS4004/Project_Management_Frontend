@@ -59,15 +59,10 @@ export const useInfiniteProjects = (params: Omit<GetProjectsParams, 'page'> = {}
         queryFn: ({ pageParam = 0 }) => projectApi.getAllProjects({ ...params, page: pageParam }),
         initialPageParam: 0,
         getNextPageParam: (lastPage, allPages) => {
-            console.log("lastPage:", lastPage);
-            console.log("allPages:", allPages);
-            // If we've reached the last page, return undefined to stop fetching
             if (lastPage.last) return undefined;
-            // Use the number of pages fetched so far as the next page number
-            // This is more reliable than trusting lastPage.page
             return allPages.length;
         },
-        staleTime: 5 * 60 * 1000, // 5 minutes
+        staleTime: 5 * 60 * 1000,
     });
 }
 

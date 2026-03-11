@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import type { Task } from "../types/task.types";
 import TaskStatusBadge from "./TaskStatusBadge";
 import TaskPriorityBadge from "./TaskPriorityBadge";
@@ -16,12 +16,13 @@ const TaskDetailHeader = ({
   onDelete,
 }: TaskDetailHeaderProps) => {
   const navigate = useNavigate();
+  const { projectId } = useParams<{ taskId: string; projectId: string }>();
 
   return (
     <div className="mb-6">
       {/* Back link */}
       <button
-        onClick={() => navigate("/tasks")}
+        onClick={() => navigate(`/projects/${projectId}/tasks`)}
         className="text-sm text-gray-500 hover:text-indigo-600 mb-4 inline-flex items-center gap-1"
       >
         ← Back to Tasks
